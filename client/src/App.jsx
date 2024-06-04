@@ -4,9 +4,12 @@ import SingIn from "./pages/SingIn";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import About from "./pages/about";
+import Header from "./components/Header";
 
 export default function App() {
-  return <BrowserRouter>
+  return (
+    <BrowserRouter>
+  <Header />
   <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/sign-in" element={<SingIn />} />
@@ -15,5 +18,6 @@ export default function App() {
     <Route path="/profile" element={<Profile />} />
 
   </Routes>
-  </BrowserRouter>;
+  </BrowserRouter>
+  );
 }
