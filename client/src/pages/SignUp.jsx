@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link ,useNavigate } from 'react-router-dom'
+
 
 
 export default function SignUp() {
@@ -8,7 +9,7 @@ export default function SignUp() {
   const [loading, setLoading] = React.useState(false);
 
   const [formData, setFormData] = React.useState({})  // Create a state variable to store the form data
-    
+  const navigate = useNavigate();
   const handleChange =  (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })  // Update the form data when the input field changes
    
@@ -35,9 +36,11 @@ export default function SignUp() {
     setError(data.message);
     return;
   }
+  
   setLoading(false);
   setError(null);
-  useNavigate('/sign-in');
+  navigate('/sign-in');
+
  
 }catch(error){
   setLoading(false);
