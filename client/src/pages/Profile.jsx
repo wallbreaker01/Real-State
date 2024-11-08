@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { useState } from 'react';
 import { updateUserFailure, updateUserSuccess, updateUserStart, signOutUserStart, signOutUserSuccess, signOutUserFailure } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
+import {Link} from 'react-router-dom';
 
 
 
@@ -82,6 +83,13 @@ export default function Profile() {
       <input type="password" placeholder='password' defaultValue={currentUser.password} id='password' className='border p-3 rounded-lg bg-slate-300' onChange={handleChange}/>
 
       <button className='uppercase bg-slate-700 text-white rounded-lg hover:opacity-90 disabled:opacity-80'>update</button>
+      
+      <Link className='bg-green-700 rounded-lg text-center text-white uppercase hover:opacity-85' to = {'/create-listing '}>
+          
+          Create Listing
+
+      </Link>
+
      </form>
 
      <div className='flex justify-between mt-5'>
