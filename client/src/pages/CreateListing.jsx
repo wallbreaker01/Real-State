@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import { useState,React  } from "react";
 import { app } from "../firebase";
 import {
   getStorage,
@@ -9,8 +8,10 @@ import {
 } from "firebase/storage";
 import { setLogLevel } from "firebase/app";
 import {useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom'
 
 export default function CreateListing() {
+  const navigate = useNavigate();
   const {currentUser} = useSelector(state => state.user)
   const [files, setFiles] = useState([]);
 
@@ -23,7 +24,7 @@ export default function CreateListing() {
     bathrooms: 1,
     bedrooms: 1,
     regularPrice: 0,
-    dicountedPrice: 0,
+    discountedPrice: 0,
     offer: false,
     parking: false,
     furnished: false,
@@ -76,39 +77,27 @@ export default function CreateListing() {
   };
 
   const handleChange = (e) => {
-    if (e.target.id === "sell" || e.target.id === "rent") {
+    const { id, type, checked, value } = e.target;
+
+    if (id === "sell" || id === "rent") {
       setFormData({
         ...formData,
-        type: e.target.id,
+        type: value,
       });
     }
 
-    if (
-      e.target.id === "parking" ||
-      e.target.id === "furnished" ||
-      e.target.id === "offer"
-    ) {
+    // Convert checkbox values to Boolean for specific fields
+    if (id === "parking" || id === "furnished" || id === "offer") {
       setFormData({
         ...formData,
-        [e.target.id]: e.target.checked,
+        [id]: checked, // checked will be true or false
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [id]: type === "checkbox" ? checked : value, // Default to string for non-checkbox inputs
       });
     }
-    if (
-      e.target.id === "number" ||
-      e.target.id === "text" ||
-      e.target.id === "textarea"
-    ) {
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.value,
-      });
-    }else{
-      setFormData({
-        ...formData,
-        [e.target.id]: e.target.value,
-      });
-    }
-
   };
 
   const handleSubmit = async (e) => {
@@ -131,6 +120,7 @@ export default function CreateListing() {
       if (data.success === false) {
         setError(data.message);
       }
+      navigate(`/listing/${data._id}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
