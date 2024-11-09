@@ -105,7 +105,7 @@ export default function Profile() {
       const data = await res.json();
 
       if (data.success === false) {
-        dispatch(updateUserFailure(data.message));
+        dispatch(updateSignOutFailure(data.message));
         return;
       }
 
@@ -165,7 +165,7 @@ export default function Profile() {
           onChange={handleChange}
         />
 
-        <button className="uppercase bg-slate-700 text-white rounded-lg hover:opacity-90 disabled:opacity-80">
+        <button onClick={handleSubmit} className="uppercase bg-slate-700 text-white rounded-lg hover:opacity-90 disabled:opacity-80">
           update
         </button>
 
