@@ -10,23 +10,32 @@ export default function CreateListing() {
    const [files, setFiles] = useState([]);
    const [formData, setFormData] = useState({
       imageURLs : [],
-
    });
+
+   const [imageUploadError, setImageUploadError] = useState(false);
    console.log(formData);
    
    const handleImageSubmit = (e) => {
      
-      if(files.length > 0 && files.length <= 6){
+      if(files.length > 0 && files.length + formData.imageURLs.length <= 6){
         const promises = [];
         for(let i = 0; i < files.length; i++){
           promises.push(uploadImage(files[i]));
         }
         Promise.all(promises).then((urls) =>{
          setFormData({...formData, imageURLs: formData.imageURLs.concat(urls) });
+         setImageUploadError(false);
+
+        }).catch((error) => {
+          console.error(error);
+          setImageUploadError('Image Upload Failed');
         });
+       
+      }else{
+        setImageUploadError('You can upload maximum 6 images');
       }
 
-   }
+   };
 
    const uploadImage = async (file) => {
 
@@ -153,6 +162,16 @@ export default function CreateListing() {
 
             <button type='button' onClick={handleImageSubmit} className='p-3 rounded-lg border border-green-700 text-green-700 uppercase hover:opacity-85 hover:shadow-lg disabled:opacity-80'>Upload</button>
          </div>
+
+         <p className='text-red-500'>{imageUploadError && imageUploadError}</p>
+         {
+          formData.imageURLs.length > 0 && formData.imageURLs.map((url) => (
+            <div className="flex justify-between p-3 border items-center">
+              <img src={url} alt='listing' className='w-full h-52 object-cover rounded-lg' />
+              <button className='text-red-700 p-3 rounded-lg uppercase hover:opacity-85'>Delete</button>
+            </div>
+          ))
+         }
 
          
       <button className='p-3 rounded-lg bg-green-700 text-white uppercase hover:opacity-85 hover:shadow-lg disabled:opacity-80'>Create listing</button>

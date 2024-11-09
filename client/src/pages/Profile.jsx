@@ -40,6 +40,8 @@ export default function Profile() {
   const [file, setFile] = useState(undefined);
   const [filePercc, setFilePercc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+  const [showListingsError, setShowListingsError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
 
   useEffect(() => {
     if (file) {
@@ -48,6 +50,7 @@ export default function Profile() {
   }, [file]);
 
   const handleFileUpload = async (file) => {
+  
     const storage = getStorage(app);
     const fileName = new Date().getTime() + "-" + file.name;
     const storageRef = ref(storage, fileName);
@@ -61,7 +64,6 @@ export default function Profile() {
     };
     () => {
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        console.log("File available at", downloadURL);
         setFormData({ ...formData, avatar: downloadURL });
       });
     };
@@ -115,6 +117,23 @@ export default function Profile() {
     }
   };
 
+  const handleShowListtings = async () => {
+      try {
+        setShowListingsError(false);
+        const res = await fetch(`/api/user/listings/${currentUser._id}`);
+        const data = await res.json();
+        if (data.success === false) {
+          setShowListingsError(true);
+          return;
+        }
+
+        setUserListings(data);
+
+      } catch (error) {
+       setShowListingsError(true);
+      }
+  };
+
   return (
     <div className="max-w-lg mx-auto p-3">
       <h1 className="text-3xl font-semibold text-center">Profile</h1>
@@ -165,7 +184,7 @@ export default function Profile() {
           onChange={handleChange}
         />
 
-        <button className="uppercase bg-slate-700 text-white rounded-lg hover:opacity-90 disabled:opacity-80">
+        <button onClick={handleSubmit} className="uppercase bg-slate-700 text-white rounded-lg hover:opacity-90 disabled:opacity-80">
           update
         </button>
 
@@ -183,6 +202,33 @@ export default function Profile() {
           Sign Out
         </span>
       </div>
+      <button onClick={handleShowListtings} className="w-full text-green-700"> Show Listings</button>
+      <p className='text-red-700 mt-5'>{showListingsError ? 'Error showing listings': ''}</p>
+
+       { userListings && userListings.length > 0 && 
+
+       userListings.map((listing) => (
+          <div key={listing._id}  className="border rounded-lg p-3 flex justify-between items-center gap-4">
+              <Link to={`/listing/${listing._id}`}>
+              <img src={listing.imageURLs[0]} alt="listing cover" className="w-16 h-16 object-contain "/>
+
+              </Link>
+
+              <Link className="flex-1" to={`/listing/${listing._id}`}>
+               <p className="text-slate-700 font-semibold  hover:underline truncate">{listing.title}</p>
+              </Link>
+
+              <div className="flex flex-col items-center">
+                <button className="text-red-700 uppercase">Delete</button>
+                <button className="text-green-700 uppercase">Edit</button>
+              </div>
+
+
+          </div>
+       ))}
+
+
+
     </div>
   );
 }
