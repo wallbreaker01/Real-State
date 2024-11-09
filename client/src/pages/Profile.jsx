@@ -107,7 +107,7 @@ export default function Profile() {
       const data = await res.json();
 
       if (data.success === false) {
-        dispatch(updateUserFailure(data.message));
+        dispatch(updateSignOutFailure(data.message));
         return;
       }
 

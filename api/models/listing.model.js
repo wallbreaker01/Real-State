@@ -64,7 +64,7 @@ const listingSchema = new mongoose.Schema({
 
     contact: {
         type: String,
-        required: true,
+        
     },
     } , {timestamps: true});
 
