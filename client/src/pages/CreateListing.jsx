@@ -15,64 +15,6 @@ export default function CreateListing() {
   const {currentUser} = useSelector(state => state.user)
   const [files, setFiles] = useState([]);
 
-<<<<<<< HEAD
-   const [files, setFiles] = useState([]);
-   const [formData, setFormData] = useState({
-      imageURLs : [],
-   });
-
-   const [imageUploadError, setImageUploadError] = useState(false);
-   console.log(formData);
-   
-   const handleImageSubmit = (e) => {
-     
-      if(files.length > 0 && files.length + formData.imageURLs.length <= 6){
-        const promises = [];
-        for(let i = 0; i < files.length; i++){
-          promises.push(uploadImage(files[i]));
-        }
-        Promise.all(promises).then((urls) =>{
-         setFormData({...formData, imageURLs: formData.imageURLs.concat(urls) });
-         setImageUploadError(false);
-
-        }).catch((error) => {
-          console.error(error);
-          setImageUploadError('Image Upload Failed');
-        });
-       
-      }else{
-        setImageUploadError('You can upload maximum 6 images');
-      }
-
-   };
-
-   const uploadImage = async (file) => {
-
-      return new Promise((resolve, reject) => {
-            const storage = getStorage(app);
-            const fileName = new Date().getTime() + '-' + file.name;
-            const storageRef = ref(storage,fileName);
-             const uploadTask = uploadBytesResumable(storageRef, file);
-              uploadTask.on(
-               'state_changed',
-               (snapshot) => {
-                   const progress =
-                   (snapshot.bytesTransferd / snapshot.totalBytes)*100;
-                   console.log(`Upload is ${progress} done`)
-               },
-                (error) => {
-                  reject(error);
-                },
-
-                ()=>{
-                  getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    resolve(downloadURL);
-                  });
-                }
-
-            );
-
-=======
   const [formData, setFormData] = useState({
     imageURLs: [],
     title: "",
@@ -104,7 +46,6 @@ export default function CreateListing() {
           ...formData,
           imageURLs: formData.imageURLs.concat(urls),
         });
->>>>>>> e249a16fc403de5249b7495d799fe4ccb27be350
       });
     }
   };
@@ -397,45 +338,6 @@ export default function CreateListing() {
               </div>
             ))}
 
-<<<<<<< HEAD
-      </div>
-
-      </div>
-
-      <div className='flex flex-col gap-4 flex-1'>
-           
-         <p className='font-semibold'>Images:
-          <span className='font-normal text-gray-600 ml-2'>The first image will be cover (max 6)</span>
-         </p>
-
-         <div className="flex gap-4">
-
-            <input onChange={(e) => setFiles(e.target.files)} type="file" id='images' accept='image/*' multiple className=' p-3 rounded-lg w-full hover:shadow-lg' required/>
-
-            <button type='button' onClick={handleImageSubmit} className='p-3 rounded-lg border border-green-700 text-green-700 uppercase hover:opacity-85 hover:shadow-lg disabled:opacity-80'>Upload</button>
-         </div>
-
-         <p className='text-red-500'>{imageUploadError && imageUploadError}</p>
-         {
-          formData.imageURLs.length > 0 && formData.imageURLs.map((url) => (
-            <div className="flex justify-between p-3 border items-center">
-              <img src={url} alt='listing' className='w-full h-52 object-cover rounded-lg' />
-              <button className='text-red-700 p-3 rounded-lg uppercase hover:opacity-85'>Delete</button>
-            </div>
-          ))
-         }
-
-         
-      <button className='p-3 rounded-lg bg-green-700 text-white uppercase hover:opacity-85 hover:shadow-lg disabled:opacity-80'>Create listing</button>
-
-
-      </div>
-
-    </form>
-
-   </main>
-  )
-=======
           <button className="p-3 rounded-lg bg-green-700 text-white uppercase hover:opacity-85 hover:shadow-lg disabled:opacity-80">
             {loading ? 'Creating...' : 'Create listing'}
           </button>
@@ -445,5 +347,4 @@ export default function CreateListing() {
       </form>
     </main>
   );
->>>>>>> e249a16fc403de5249b7495d799fe4ccb27be350
 }
